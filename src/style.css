@@ -1,0 +1,98 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+  background: #100224;
+  color: white;
+  text-align: center;
+}
+
+/* zigzag side strips */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  width: 90px;
+  height: 100vh;
+  background: linear-gradient(180deg, #ff4fd8, #6c3cff);
+  z-index: -1;
+}
+
+body::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 60% 5%, 100% 10%, 60% 15%, 100% 20%, 60% 25%, 100% 30%,
+    60% 35%, 100% 40%, 60% 45%, 100% 50%, 60% 55%, 100% 60%, 60% 65%, 100% 70%,
+    60% 75%, 100% 80%, 60% 85%, 100% 90%, 60% 95%, 100% 100%, 0 100%);
+}
+
+body::after {
+  right: 0;
+  clip-path: polygon(100% 0, 0 0, 40% 5%, 0 10%, 40% 15%, 0 20%, 40% 25%, 0 30%,
+    40% 35%, 0 40%, 40% 45%, 0 50%, 40% 55%, 0 60%, 40% 65%, 0 70%,
+    40% 75%, 0 80%, 40% 85%, 0 90%, 40% 95%, 0 100%, 100% 100%);
+}
+
+.controls {
+  padding: 1rem;
+  font-family: "Black Ops One", sans-serif;
+}
+
+.controls input {
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: none;
+  font-family: inherit;
+}
+
+#app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 2rem 3rem;
+}
+
+h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+}
+
+p {
+  font-family: "Black Ops One", sans-serif;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.date {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+img,
+video,
+iframe {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 1rem 0;
+}
+
+iframe {
+  height: 450px;
+  border: none;
+}
+
+a {
+  color: #ffe564;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  body::before,
+  body::after {
+    display: none;
+  }
+  iframe {
+    height: 250px;
+  }
+}
