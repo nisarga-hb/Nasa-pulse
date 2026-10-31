@@ -1,9 +1,5 @@
 import "./style.css";
-import { defineConfig } from 'vite'
 
-export default defineConfig({
-  base: '/Nasa-pulse/',
-})
 const API_KEY = import.meta.env.VITE_NASA_API_KEY || "DEMO_KEY"; // DEMO_KEY = rate-limited fallback
 const app = document.querySelector("#app");
 const picker = document.querySelector("#datepicker");
