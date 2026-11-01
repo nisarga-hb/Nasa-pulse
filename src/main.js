@@ -95,16 +95,24 @@ function loadApod(date) {
       return res.json();
     })
     .then(data => {
-      // title is a WordPress object: { rendered: "..." }
-      const title       = data.title?.rendered || data.title || "No title";
-      const explanation = data.explanation || "";
-      const copyright   = data.copyright ? ` · © ${data.copyright.trim()}` : "";
+      const title      = data.title?.rendered ?? data.title ?? "No title";
+      const copyright  = data.copyright ? ` · © ${data.copyright.trim()}` : "";
+
+      // explanation comes back as HTML — put it in a div, not a <p>
+      const explanation = data.explanation ?? "";
+
+      // url is nested: data.url.url
+      const mediaUrl   = data.url?.url ?? data.url ?? "";
+      const mediaType  = data.media_type ?? "image";
+
+      // rebuild data object with flat fields for buildMedia
+      const flat = { url: mediaUrl, media_type: mediaType, title };
 
       app.innerHTML = `
         <h1>${title}</h1>
         <p class="date">${data.date}${copyright}</p>
-        ${buildMedia(data)}
-        <p>${explanation}</p>
+        ${buildMedia(flat)}
+        <div class="explanation">${explanation}</div>
       `;
     })
     .catch(err => {
