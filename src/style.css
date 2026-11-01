@@ -1,13 +1,14 @@
+/* ─── RESET & BASE ───────────────────────────────────────────────────────── */
 body {
   margin: 0;
   min-height: 100vh;
-  position: relative;
   background: #100224;
   color: white;
-  text-align: center;
+  font-family: "Black Ops One", sans-serif;
+  display: flex;
 }
 
-/* zigzag side strips */
+/* ─── ZIGZAG SIDE STRIPS (unchanged from original) ───────────────────────── */
 body::before,
 body::after {
   content: "";
@@ -16,7 +17,8 @@ body::after {
   width: 90px;
   height: 100vh;
   background: linear-gradient(180deg, #ff4fd8, #6c3cff);
-  z-index: -1;
+  z-index: 0;
+  pointer-events: none;
 }
 
 body::before {
@@ -33,16 +35,137 @@ body::after {
     40% 75%, 0 80%, 40% 85%, 0 90%, 40% 95%, 0 100%, 100% 100%);
 }
 
+/* ─── SIDEBAR (clock + weather) ─────────────────────────────────────────── */
+#sidebar {
+  position: fixed;
+  left: 100px;           /* clear the zigzag strip */
+  top: 0;
+  width: 200px;
+  height: 100vh;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 1;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Clock */
+.clock-time {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ff4fd8;
+}
+
+.clock-date {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: 0.3rem;
+}
+
+/* City input */
+#weather-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#city-input {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: white;
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#city-input::placeholder {
+  opacity: 0.4;
+}
+
+#city-btn {
+  background: linear-gradient(135deg, #ff4fd8, #6c3cff);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-family: "Black Ops One", sans-serif;
+  font-size: 0.8rem;
+  padding: 0.4rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+#city-btn:hover {
+  opacity: 0.85;
+}
+
+/* Weather display */
+#weather {
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.weather-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  border-radius: 0;
+}
+
+.weather-city {
+  font-size: 0.85rem;
+  color: #ff4fd8;
+}
+
+.weather-temp {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.weather-desc {
+  text-transform: capitalize;
+  opacity: 0.8;
+}
+
+.weather-feels,
+.weather-humidity {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+/* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
+#main {
+  margin-left: 310px;   /* sidebar (100px strip + 200px sidebar + 10px gap) */
+  margin-right: 100px;  /* clear right zigzag strip */
+  flex: 1;
+  text-align: center;
+  padding-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
 .controls {
   padding: 1rem;
+}
+
+.controls label {
   font-family: "Black Ops One", sans-serif;
+  margin-right: 0.5rem;
 }
 
 .controls input {
   padding: 0.4rem;
   border-radius: 6px;
   border: none;
-  font-family: inherit;
+  font-family: "Black Ops One", sans-serif;
 }
 
 #app {
@@ -68,6 +191,10 @@ p {
   font-size: 0.9rem;
 }
 
+.error {
+  color: #ff4fd8;
+}
+
 img,
 video,
 iframe {
@@ -87,11 +214,32 @@ a {
   text-decoration: underline;
 }
 
-@media (max-width: 600px) {
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  body {
+    flex-direction: column;
+  }
+
   body::before,
   body::after {
     display: none;
   }
+
+  #sidebar {
+    position: static;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem;
+  }
+
+  #main {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   iframe {
     height: 250px;
   }

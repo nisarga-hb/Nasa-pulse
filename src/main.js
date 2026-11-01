@@ -1,50 +1,132 @@
 import "./style.css";
 
-const API_KEY = import.meta.env.VITE_NASA_API_KEY || "DEMO_KEY"; // DEMO_KEY = rate-limited fallback
-const app = document.querySelector("#app");
-const picker = document.querySelector("#datepicker");
+// ─── ELEMENTS ────────────────────────────────────────────────────────────────
+const app      = document.querySelector("#app");
+const picker   = document.querySelector("#datepicker");
+const clockEl  = document.querySelector("#clock");
+const weatherEl = document.querySelector("#weather");
+const cityInput = document.querySelector("#city-input");
+const cityBtn   = document.querySelector("#city-btn");
 
-// APOD only has images up to today, and starts on 1995-06-16
-const today = new Date().toISOString().split("T")[0];
-picker.max = today;
-picker.min = "1995-06-16";
-picker.value = today;
+// ─── WEATHER API KEY (OpenWeatherMap) ────────────────────────────────────────
+const WEATHER_KEY = import.meta.env.VITE_WEATHER_KEY;
+
+// ─── CLOCK ───────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const hh  = String(now.getHours()).padStart(2, "0");
+  const mm  = String(now.getMinutes()).padStart(2, "0");
+  const ss  = String(now.getSeconds()).padStart(2, "0");
+  const dateStr = now.toDateString();
+  clockEl.innerHTML = `
+    <div class="clock-time">${hh}:${mm}:${ss}</div>
+    <div class="clock-date">${dateStr}</div>
+  `;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ─── WEATHER ─────────────────────────────────────────────────────────────────
+function loadWeather(city) {
+  weatherEl.innerHTML = `<p>loading weather...</p>`;
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${WEATHER_KEY}&units=metric`
+  )
+    .then(res => {
+      if (!res.ok) throw new Error(`City not found (${res.status})`);
+      return res.json();
+    })
+    .then(data => {
+      const temp    = Math.round(data.main.temp);
+      const feels   = Math.round(data.main.feels_like);
+      const desc    = data.weather[0].description;
+      const icon    = data.weather[0].icon;
+      const humidity = data.main.humidity;
+      weatherEl.innerHTML = `
+        <img
+          src="https://openweathermap.org/img/wn/${icon}@2x.png"
+          alt="${desc}"
+          class="weather-icon"
+        />
+        <div class="weather-city">${data.name}, ${data.sys.country}</div>
+        <div class="weather-temp">${temp}°C</div>
+        <div class="weather-desc">${desc}</div>
+        <div class="weather-feels">feels like ${feels}°C</div>
+        <div class="weather-humidity">humidity ${humidity}%</div>
+      `;
+    })
+    .catch(err => {
+      weatherEl.innerHTML = `<p class="error">⚠ ${err.message}</p>`;
+    });
+}
+
+cityBtn.addEventListener("click", () => {
+  const city = cityInput.value.trim();
+  if (city) loadWeather(city);
+});
+
+cityInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const city = cityInput.value.trim();
+    if (city) loadWeather(city);
+  }
+});
+
+// ─── NASA APOD (new API — no key needed) ─────────────────────────────────────
+// New endpoint uses YYMMDD format e.g. 2024-01-15 → 240115
+function toYYMMDD(isoDate) {
+  // isoDate is "YYYY-MM-DD"
+  return isoDate.slice(2, 4) + isoDate.slice(5, 7) + isoDate.slice(8, 10);
+}
 
 function buildMedia(data) {
+  const url = data.url || "";
   if (data.media_type === "image") {
-    return `<img src="${data.url}" alt="${data.title}" />`;
-  } else if (data.url.includes("youtube")) {
-    return `<iframe src="${data.url}" allowfullscreen></iframe>`;
+    return `<img src="${url}" alt="${data.title}" />`;
+  } else if (url.includes("youtube") || url.includes("youtu.be")) {
+    return `<iframe src="${url}" allowfullscreen></iframe>`;
   } else if (data.media_type === "video") {
-    return `<video src="${data.url}" controls></video>`;
+    return `<video src="${url}" controls></video>`;
   }
-  return `<p><a href="${data.url}" target="_blank">open media</a></p>`;
+  return `<p><a href="${url}" target="_blank">open media</a></p>`;
 }
 
 function loadApod(date) {
   app.innerHTML = "<p>loading...</p>";
+  const yymmdd = toYYMMDD(date);
 
-  // 1. request  2. response  3. convert to data  4. display
-  fetch(`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${date}`)
-    .then(response => {
-      if (!response.ok) throw new Error(`NASA API returned ${response.status}`);
-      return response.json();
+  fetch(`https://science.nasa.gov/wp-json/wp/v2/apod-basic/${yymmdd}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`NASA returned ${res.status} for ${date}`);
+      return res.json();
     })
     .then(data => {
+      // title is a WordPress object: { rendered: "..." }
+      const title       = data.title?.rendered || data.title || "No title";
+      const explanation = data.explanation || "";
+      const copyright   = data.copyright ? ` · © ${data.copyright.trim()}` : "";
+
       app.innerHTML = `
-        <h1>${data.title}</h1>
-        <p class="date">${data.date}${data.copyright ? " · © " + data.copyright.trim() : ""}</p>
+        <h1>${title}</h1>
+        <p class="date">${data.date}${copyright}</p>
         ${buildMedia(data)}
-        <p>${data.explanation}</p>
+        <p>${explanation}</p>
       `;
     })
     .catch(err => {
-      app.innerHTML = `<p>Error: ${err.message}</p>`;
+      app.innerHTML = `<p class="error">⚠ ${err.message}</p>`;
     });
 }
+
+// ─── DATE PICKER SETUP ───────────────────────────────────────────────────────
+const today = new Date().toISOString().split("T")[0];
+picker.max   = today;
+picker.min   = "1995-06-16";
+picker.value = today;
 
 picker.addEventListener("change", () => {
   if (picker.value) loadApod(picker.value);
 });
 
+// ─── INIT ────────────────────────────────────────────────────────────────────
 loadApod(today);

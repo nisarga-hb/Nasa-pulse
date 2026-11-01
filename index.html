@@ -10,11 +10,26 @@
     />
   </head>
   <body>
-    <div class="controls">
-      <label for="datepicker">pick a date:</label>
-      <input type="date" id="datepicker" />
+
+    <!-- LEFT SIDEBAR: clock + weather -->
+    <div id="sidebar">
+      <div id="clock"></div>
+      <div id="weather-form">
+        <input type="text" id="city-input" placeholder="enter city..." />
+        <button id="city-btn">go</button>
+      </div>
+      <div id="weather"></div>
     </div>
-    <div id="app"></div>
+
+    <!-- MAIN CONTENT: date picker + APOD -->
+    <div id="main">
+      <div class="controls">
+        <label for="datepicker">pick a date:</label>
+        <input type="date" id="datepicker" />
+      </div>
+      <div id="app"></div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
