@@ -1,6 +1,5 @@
 import "./style.css";
 
-// ─── ELEMENTS ────────────────────────────────────────────────────────────────
 const app      = document.querySelector("#app");
 const picker   = document.querySelector("#datepicker");
 const clockEl  = document.querySelector("#clock");
@@ -8,10 +7,8 @@ const weatherEl = document.querySelector("#weather");
 const cityInput = document.querySelector("#city-input");
 const cityBtn   = document.querySelector("#city-btn");
 
-// ─── WEATHER API KEY (OpenWeatherMap) ────────────────────────────────────────
 const WEATHER_KEY = import.meta.env.VITE_WEATHER_KEY;
 
-// ─── CLOCK ───────────────────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
   const hh  = String(now.getHours()).padStart(2, "0");
@@ -26,7 +23,6 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ─── WEATHER ─────────────────────────────────────────────────────────────────
 function loadWeather(city) {
   weatherEl.innerHTML = `<p>loading weather...</p>`;
   fetch(
@@ -72,8 +68,6 @@ cityInput.addEventListener("keydown", e => {
   }
 });
 
-// ─── NASA APOD (new API — no key needed) ─────────────────────────────────────
-// New endpoint uses YYMMDD format e.g. 2024-01-15 → 240115
 function toYYMMDD(isoDate) {
   // isoDate is "YYYY-MM-DD"
   return isoDate.slice(2, 4) + isoDate.slice(5, 7) + isoDate.slice(8, 10);
@@ -118,7 +112,6 @@ function loadApod(date) {
     });
 }
 
-// ─── DATE PICKER SETUP ───────────────────────────────────────────────────────
 const today = new Date().toISOString().split("T")[0];
 picker.max   = today;
 picker.min   = "1995-06-16";
@@ -128,5 +121,4 @@ picker.addEventListener("change", () => {
   if (picker.value) loadApod(picker.value);
 });
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
 loadApod(today);

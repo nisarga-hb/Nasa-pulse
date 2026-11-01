@@ -1,4 +1,4 @@
-/* ─── RESET & BASE ───────────────────────────────────────────────────────── */
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -8,7 +8,6 @@ body {
   display: flex;
 }
 
-/* ─── ZIGZAG SIDE STRIPS (unchanged from original) ───────────────────────── */
 body::before,
 body::after {
   content: "";
@@ -35,7 +34,6 @@ body::after {
     40% 75%, 0 80%, 40% 85%, 0 90%, 40% 95%, 0 100%, 100% 100%);
 }
 
-/* ─── SIDEBAR (clock + weather) ─────────────────────────────────────────── */
 #sidebar {
   position: fixed;
   left: 100px;           /* clear the zigzag strip */
@@ -141,7 +139,6 @@ body::after {
   font-size: 0.75rem;
 }
 
-/* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
 #main {
   margin-left: 310px;   /* sidebar (100px strip + 200px sidebar + 10px gap) */
   margin-right: 100px;  /* clear right zigzag strip */
@@ -214,7 +211,6 @@ a {
   text-decoration: underline;
 }
 
-/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 700px) {
   body {
     flex-direction: column;
