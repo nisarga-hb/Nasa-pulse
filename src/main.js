@@ -102,7 +102,7 @@ function loadApod(date) {
       const explanation = data.explanation ?? "";
 
       // url is nested: data.url.url
-      const mediaUrl   = data.url?.url ?? data.url ?? "";
+      const mediaUrl = data.hdurl ?? data.url?.url ?? data.url ?? "";
       const mediaType  = data.media_type ?? "image";
 
       // rebuild data object with flat fields for buildMedia
