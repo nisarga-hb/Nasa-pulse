@@ -240,3 +240,16 @@ a {
     height: 250px;
   }
 }
+
+.explanation {
+  font-family: "Black Ops One", sans-serif;
+  line-height: 1.6;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.explanation a {
+  color: #ffe564;
+}
