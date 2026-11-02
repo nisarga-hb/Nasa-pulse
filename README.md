@@ -12,7 +12,15 @@ From Nisarga in Hackclub 0_0
 - Html, CSS and Vanilla JS for my front end
 - vite for build and development
 
-## 
+## Colors used in the site
+- `#100224` — dark purple background
+- `#FF4FD8` — bright pink accent
+- `#6C3CFF` — purple gradient accent
+- `#FFE564` — yellow links
+
+## Latest update
+Added the weather api and a clock. Enter your city name and it will show you weather at your city including temp and humitdity.
+
 Please use `npm run dev` and `npm run preview` While editing the vite code to run the server. I struggled a bit there.
 
-Great one by stardance team
+# Webiste link : https://nisarga-hb.github.io/Nasa-pulse/
